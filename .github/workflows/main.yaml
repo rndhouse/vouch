@@ -40,7 +40,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --release --all-features --locked --verbose --package vouch
+          args: --release --all-features --verbose --package vouch
 
       - name: Zip the asset into a zip file
         id: zip_asset
