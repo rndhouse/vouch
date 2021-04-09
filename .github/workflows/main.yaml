@@ -63,7 +63,7 @@ jobs:
       - name: Setup musl
         if: "contains(matrix.target, 'x86_64-unknown-linux-musl')"
         run: |
-          sudo apt install musl-tools linux-headers-generic
+          sudo apt install musl-tools linux-headers-generic libssl-dev
 
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
@@ -83,7 +83,9 @@ jobs:
           # command: build
           # args: --package openssl-sys:0.9.61
           command: build
-          args: --release --all-features --locked --verbose --package vouch --target ${{ matrix.target }}
+          args: --package rand:0.8.3
+          # command: build
+          # args: --release --all-features --locked --verbose --package vouch --target ${{ matrix.target }}
 
       - name: Build non-musl
         if: "!contains(matrix.target, 'x86_64-unknown-linux-musl')"
