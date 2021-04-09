@@ -1,30 +1,59 @@
----
-name: "tagged-release"
+name: CI for release tags
 
 on:
   push:
     tags:
       - "v*"
 
-env:
-  CARGO_TERM_COLOR: always
-
 jobs:
-  tagged-release:
-    name: "Tagged Release"
-    runs-on: "ubuntu-latest"
+  once:
+    name: Create single release for all builds
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Create a release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: true
+          prerelease: true
+  build:
+    name: Create cross-platform release builds, tag and upload binaries
+    needs: once
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
 
     steps:
       - uses: actions/checkout@v2
-      - name: Build
-        run: cargo build --verbose
-      - name: Run tests
-        run: cargo test --verbose
-
-      - uses: "marvinpinto/action-automatic-releases@latest"
+      - uses: actions-rs/toolchain@v1
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          prerelease: false
-          files: |
-            LICENSE
-            *.jar
+          toolchain: stable
+
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release --all-features --locked --verbose --package vouch
+
+      - name: Zip the asset into a zip file
+        id: zip_asset
+        run: |
+          7z a -tzip ${{ github.workspace }}/vouch-${{ matrix.os }}-${{ github.ref }}.zip ${{ github.workspace }}/target/release/vouch ${{ github.workspace }}/LICENSE
+
+      - name: Upload release assets
+        id: upload_assets
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.once.outputs.upload_url }}
+          asset_path: ${{ github.workspace }}/vouch-${{ matrix.os }}-${{ github.ref }}.zip
+          asset_name: vouch-${{ matrix.os }}-${{ github.ref }}.zip
+          asset_content_type: application/octet-stream
