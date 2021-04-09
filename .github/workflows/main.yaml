@@ -75,7 +75,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: build
-          args: openssl-sys:0.9.61
+          args: --package openssl-sys:0.9.61
           # command: build
           # args: --release --all-features --locked --verbose --package vouch --target ${{ matrix.target }}
 
