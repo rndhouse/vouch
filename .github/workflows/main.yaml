@@ -70,7 +70,7 @@ jobs:
         env:
           PKG_CONFIG_ALLOW_CROSS: 1
           OPENSSL_STATIC: true
-          OPENSSL_DIR: ${{ github.workspace }}/musl
+          OPENSSL_DIR: ${{ github.workspace }}/musl/ssl
         uses: actions-rs/cargo@v1
         with:
           command: build
