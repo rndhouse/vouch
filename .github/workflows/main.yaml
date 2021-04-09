@@ -45,7 +45,7 @@ jobs:
         run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
 
       - name: Install musl apt packages
-        if: ${{ matrix.target == "x86_64-unknown-linux-musl" }}
+        if: "contains(matrix.target, 'x86_64-unknown-linux-musl')"
         run: sudo apt install musl-tools libssl-dev
 
       - uses: actions/checkout@v2
