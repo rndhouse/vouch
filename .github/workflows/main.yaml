@@ -44,6 +44,10 @@ jobs:
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
 
+      - name: Install musl apt packages
+        if: ${{ matrix.target }} == "x86_64-unknown-linux-musl"
+        run: apt install musl-tools libssl-dev
+
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
         with:
