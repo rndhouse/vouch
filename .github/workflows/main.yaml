@@ -28,17 +28,16 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest]
-        # os: [windows-latest, macos-latest, ubuntu-latest]
+        os: [windows-latest, macos-latest, ubuntu-latest]
         include:
           - os: windows-latest
             target: x86_64-pc-windows-msvc
           
-          # - os: macos-latest
-          #   target: x86_64-apple-darwin
+          - os: macos-latest
+            target: x86_64-apple-darwin
 
-          # - os: ubuntu-latest
-          #   target: x86_64-unknown-linux-musl
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-musl
 
     steps:
       - name: Get version from tag
