@@ -28,7 +28,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
+        os: [windows-latest]
+        # os: [windows-latest, macos-latest, ubuntu-latest]
         include:
           - os: windows-latest
             target: x86_64-pc-windows-msvc
@@ -68,7 +69,7 @@ jobs:
       - name: Build check
         if: "!contains(matrix.target, 'x86_64-unknown-linux-musl')"
         run: |
-          tree ${{ github.workspace }}/target -L 3
+          tree ${{ github.workspace }}/target
 
       - name: Archive release assets
         id: archive_assets
