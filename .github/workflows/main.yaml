@@ -23,7 +23,7 @@ jobs:
           draft: true
           prerelease: true
   build:
-    name: Create OS specific release build
+    name: OS specific build
     needs: once
     runs-on: ${{ matrix.os }}
     strategy:
@@ -44,7 +44,7 @@ jobs:
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
 
-      - name: Install musl apt packages
+      - name: Build musl
         if: "contains(matrix.target, 'x86_64-unknown-linux-musl')"
         run: |
           sudo apt install musl-tools
@@ -62,6 +62,10 @@ jobs:
           PKG_CONFIG_ALLOW_CROSS: 1
           OPENSSL_STATIC: true
           OPENSSL_DIR: ${{ github.workspace }}/musl
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release --all-features --locked --verbose --package vouch --target ${{ matrix.target }}
 
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
@@ -69,7 +73,8 @@ jobs:
           toolchain: stable
           target: ${{ matrix.target }}
 
-      - name: Build
+      - name: Build non-musl
+        if: "!contains(matrix.target, 'x86_64-unknown-linux-musl')"
         env:
           OPENSSL_STATIC: yes
         uses: actions-rs/cargo@v1
