@@ -51,7 +51,7 @@ jobs:
           target: ${{ matrix.target }}
 
       - name: Build
-        env: OPENSSL_STATIC=yes
+        OPENSSL_STATIC: yes
         uses: actions-rs/cargo@v1
         with:
           command: build
