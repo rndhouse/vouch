@@ -71,22 +71,28 @@ jobs:
           toolchain: stable
           target: ${{ matrix.target }}
 
+      # - name: Build musl
+      #   if: "contains(matrix.target, 'x86_64-unknown-linux-musl')"
+      #   env:
+      #     PKG_CONFIG_ALLOW_CROSS: 1
+      #     OPENSSL_STATIC: true
+      #     # OPENSSL_DIR: ${{ github.workspace }}/musl
+      #     # OPENSSL_LIB_DIR: ${{ github.workspace }}/musl/lib
+      #     OPENSSL_INCLUDE_DIR: /usr/include/x86_64-linux-gnu
+      #   uses: actions-rs/cargo@v1
+      #   with:
+      #     # command: build
+      #     # args: --package openssl-sys:0.9.61
+      #     # command: build
+      #     # args: --package rand:0.8.3 --release
+      #     command: build
+      #     args: --release --all-features --locked --verbose --package vouch --target ${{ matrix.target }}
+
       - name: Build musl
         if: "contains(matrix.target, 'x86_64-unknown-linux-musl')"
-        env:
-          PKG_CONFIG_ALLOW_CROSS: 1
-          OPENSSL_STATIC: true
-          # OPENSSL_DIR: ${{ github.workspace }}/musl
-          # OPENSSL_LIB_DIR: ${{ github.workspace }}/musl/lib
-          OPENSSL_INCLUDE_DIR: /usr/include/x86_64-linux-gnu
-        uses: actions-rs/cargo@v1
-        with:
-          # command: build
-          # args: --package openssl-sys:0.9.61
-          # command: build
-          # args: --package rand:0.8.3 --release
-          command: build
-          args: --release --all-features --locked --verbose --package vouch --target ${{ matrix.target }}
+        run: |
+          docker pull clux/muslrust
+          docker run -v $PWD:/volume --rm -t clux/muslrust cargo build --release --all-features --locked --verbose --package vouch
 
       - name: Build non-musl
         if: "!contains(matrix.target, 'x86_64-unknown-linux-musl')"
