@@ -44,49 +44,11 @@ jobs:
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
 
-      # - name: Setup musl
-      #   if: "contains(matrix.target, 'x86_64-unknown-linux-musl')"
-      #   run: |
-      #     sudo apt install musl-tools
-      #     mkdir ${{ github.workspace }}/musl
-      #     wget https://github.com/openssl/openssl/archive/OpenSSL_1_1_1f.tar.gz
-      #     tar zxvf OpenSSL_1_1_1f.tar.gz 
-      #     cd openssl-OpenSSL_1_1_1f/
-      #     CC="musl-gcc -static -idirafter /usr/include/ -idirafter /usr/include/x86_64-linux-gnu/ -fPIE -pie" ./Configure no-shared no-async --prefix=${{ github.workspace }}/musl --openssldir=${{ github.workspace }}/musl/ssl linux-x86_64 -DOPENSSL_NO_SECURE_MEMORY
-      #     make depend
-      #     make -j$(nproc)
-      #     make install
-      #     cd ${{ github.workspace }}
-      #     echo "tree: " && tree ${{ github.workspace }}/musl -L 2
-        # -DOPENSSL_NO_SECURE_MEMORY due to https://github.com/openssl/openssl/issues/7207
-
-      - name: Setup musl
-        if: "contains(matrix.target, 'x86_64-unknown-linux-musl')"
-        run: |
-          sudo apt install musl-tools linux-headers-generic libssl-dev openssl
-
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           target: ${{ matrix.target }}
-
-      # - name: Build musl
-      #   if: "contains(matrix.target, 'x86_64-unknown-linux-musl')"
-      #   env:
-      #     PKG_CONFIG_ALLOW_CROSS: 1
-      #     OPENSSL_STATIC: true
-      #     # OPENSSL_DIR: ${{ github.workspace }}/musl
-      #     # OPENSSL_LIB_DIR: ${{ github.workspace }}/musl/lib
-      #     OPENSSL_INCLUDE_DIR: /usr/include/x86_64-linux-gnu
-      #   uses: actions-rs/cargo@v1
-      #   with:
-      #     # command: build
-      #     # args: --package openssl-sys:0.9.61
-      #     # command: build
-      #     # args: --package rand:0.8.3 --release
-      #     command: build
-      #     args: --release --all-features --locked --verbose --package vouch --target ${{ matrix.target }}
 
       - name: Build musl
         if: "contains(matrix.target, 'x86_64-unknown-linux-musl')"
@@ -106,7 +68,7 @@ jobs:
       - name: Archive release assets
         id: archive_assets
         run: |
-          7z a -tzip ${{ github.workspace }}/vouch-${{ steps.get_version.outputs.VERSION }}-${{ matrix.target }}.zip ${{ github.workspace }}/target/release/vouch ${{ github.workspace }}/LICENSE
+          7z a -tzip ${{ github.workspace }}/vouch-${{ steps.get_version.outputs.VERSION }}-${{ matrix.target }}.zip ${{ github.workspace }}/target/x86_64-unknown-linux-musl/release/vouch ${{ github.workspace }}/LICENSE
 
       - name: Upload release archive
         id: upload_archive
