@@ -78,6 +78,7 @@ jobs:
           OPENSSL_STATIC: true
           # OPENSSL_DIR: ${{ github.workspace }}/musl
           # OPENSSL_LIB_DIR: ${{ github.workspace }}/musl/lib
+          OPENSSL_INCLUDE_DIR: /usr/include/x86_64-linux-gnu
         uses: actions-rs/cargo@v1
         with:
           # command: build
