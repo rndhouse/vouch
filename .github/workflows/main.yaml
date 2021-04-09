@@ -64,7 +64,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --release --locked --verbose --package youtrack-commander:0.2.0 --target ${{ matrix.target }}
+          args: --release --locked --verbose --package serde:1.0.125 --target ${{ matrix.target }}
           # args: --release --locked --all-features --verbose --package vouch --target ${{ matrix.target }}
 
       - name: Build check
