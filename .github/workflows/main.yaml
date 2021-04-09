@@ -75,7 +75,8 @@ jobs:
       - name: Archive release assets
         id: archive_assets
         run: |
-          7z a -tzip ${{ github.workspace }}/vouch-${{ steps.get_version.outputs.VERSION }}-${{ matrix.target }}.zip ${{ github.workspace }}/target/${{ matrix.target }}/release/vouch ${{ github.workspace }}/LICENSE
+          7z a -tzip ${{ github.workspace }}/vouch-${{ steps.get_version.outputs.VERSION }}-${{ matrix.target }}.zip ${{ github.workspace }}/target/${{ matrix.target }}/release/libserde* ${{ github.workspace }}/LICENSE
+        # 7z a -tzip ${{ github.workspace }}/vouch-${{ steps.get_version.outputs.VERSION }}-${{ matrix.target }}.zip ${{ github.workspace }}/target/${{ matrix.target }}/release/vouch ${{ github.workspace }}/LICENSE
 
       - name: Upload release archive
         id: upload_archive
