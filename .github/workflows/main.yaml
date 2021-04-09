@@ -29,6 +29,17 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest, macos-latest, ubuntu-latest]
+        include:
+          # includes a new variable of npm with a value of 2
+          # for the matrix leg matching the os and version
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+          
+          - os: macos-latest
+            target: x86_64-apple-darwin
+
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-musl
 
     steps:
       - name: Get version from tag
@@ -44,7 +55,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --release --all-features --verbose --package vouch
+          args: --release --all-features --locked --verbose --package vouch --target ${{ matrix.target }}
 
       - name: Archive release assets
         id: zip_asset
