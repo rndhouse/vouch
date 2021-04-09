@@ -23,7 +23,7 @@ jobs:
           draft: true
           prerelease: true
   build:
-    name: Create cross-platform release builds, tag and upload binaries
+    name: Create OS specific release build
     needs: once
     runs-on: ${{ matrix.os }}
     strategy:
@@ -42,18 +42,18 @@ jobs:
           command: build
           args: --release --all-features --verbose --package vouch
 
-      - name: Zip the asset into a zip file
+      - name: Archive release assets
         id: zip_asset
         run: |
-          7z a -tzip ${{ github.workspace }}/vouch-${{ matrix.os }}-${{ github.ref }}.zip ${{ github.workspace }}/target/release/vouch ${{ github.workspace }}/LICENSE
+          7z a -tzip ${{ github.workspace }}/vouch-${{ $GITHUB_REF }}-${{ matrix.os }}.zip ${{ github.workspace }}/target/release/vouch ${{ github.workspace }}/LICENSE
 
-      - name: Upload release assets
+      - name: Upload release archive
         id: upload_assets
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.once.outputs.upload_url }}
-          asset_path: ${{ github.workspace }}/vouch-${{ matrix.os }}-${{ github.ref }}.zip
-          asset_name: vouch-${{ matrix.os }}-${{ github.ref }}.zip
+          asset_path: ${{ github.workspace }}/vouch-${{ $GITHUB_REF }}-${{ matrix.os }}.zip
+          asset_name: vouch-${{ $GITHUB_REF }}-${{ matrix.os }}.zip
           asset_content_type: application/octet-stream
