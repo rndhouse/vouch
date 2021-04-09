@@ -65,11 +65,12 @@ jobs:
         with:
           command: build
           args: --release --locked --verbose --package serde:1.0.125 --target ${{ matrix.target }}
+          # args: --release --locked --all-features --verbose --package vouch --target ${{ matrix.target }}
 
       - name: Build check
         if: "!contains(matrix.target, 'x86_64-unknown-linux-musl')"
         run: |
-          tree ${{ github.workspace }}/target
+          tree ${{ github.workspace }}/target /f
 
       - name: Archive release assets
         id: archive_assets
