@@ -50,11 +50,11 @@ jobs:
       - name: whereami
         shell: bash
         run: |
-          ln -s "$(pwd)/vouch-py" ../../vouch-py;
+          ln -s "$(pwd)/vouch-py" ../vouch-py;
           echo $(pwd);
           ls -a;
           echo hi;
-          ls -a ../../
+          ls -a ../
 
       - name: Set package metadata
         id: meta
