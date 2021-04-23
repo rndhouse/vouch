@@ -43,7 +43,6 @@ jobs:
         with:
           repository: 'vouch-dev/vouch-py'
           fetch-depth: 1
-          path: '../'
 
       - name: Set package metadata
         id: meta
