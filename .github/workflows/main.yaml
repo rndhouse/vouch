@@ -72,7 +72,7 @@ jobs:
         if: "contains(matrix.target, 'x86_64-unknown-linux-musl')"
         run: |
           docker pull clux/muslrust
-          docker run -v $(dirname `pwd`):/volume -v $(pwd)/vouch-py:/volume/vouch-py -w /volume/vouch --rm -t clux/muslrust cargo build --release --all-features --locked --verbose --package ${{ steps.meta.outputs.NAME }}
+          docker run -v $(dirname `pwd`):/volume -v $(pwd)/vouch-py:/volume/vouch-py -w /volume/vouch --rm -t clux/muslrust cargo build --release --all-features --verbose --package ${{ steps.meta.outputs.NAME }}
 
       - name: Build non-musl
         if: "!contains(matrix.target, 'x86_64-unknown-linux-musl')"
@@ -81,7 +81,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --release --locked --all-features --verbose --package ${{ steps.meta.outputs.NAME }} --target ${{ matrix.target }}
+          args: --release --all-features --verbose --package ${{ steps.meta.outputs.NAME }} --target ${{ matrix.target }}
 
       - name: Archive release assets
         id: archive_assets
