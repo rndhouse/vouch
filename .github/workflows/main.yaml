@@ -38,11 +38,14 @@ jobs:
             target: x86_64-unknown-linux-musl
 
     steps:
+      - uses: actions/checkout@v2
+
       - name: Get vouch-py
         uses: actions/checkout@v2
         with:
           repository: 'vouch-dev/vouch-py'
           fetch-depth: 1
+          path: vouch-py
 
       - name: Set package metadata
         id: meta
@@ -51,7 +54,6 @@ jobs:
           echo ::set-output name=NAME::vouch
           echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
 
-      - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
