@@ -38,6 +38,13 @@ jobs:
             target: x86_64-unknown-linux-musl
 
     steps:
+      - name: Get vouch-py
+        uses: actions/checkout@v2
+        with:
+          repository: 'https://github.com/vouch-dev/vouch-py'
+          fetch-depth: 1
+          path: '../'
+
       - name: Set package metadata
         id: meta
         shell: bash
