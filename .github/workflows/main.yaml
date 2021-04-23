@@ -72,7 +72,7 @@ jobs:
         if: "contains(matrix.target, 'x86_64-unknown-linux-musl')"
         run: |
           docker pull clux/muslrust
-          docker run -v ../$(PWD):/volume -w $(PWD) --rm -t clux/muslrust cargo build --release --all-features --locked --verbose --package ${{ steps.meta.outputs.NAME }}
+          docker run -v ../$(pwd):/volume -w $(pwd) --rm -t clux/muslrust cargo build --release --all-features --locked --verbose --package ${{ steps.meta.outputs.NAME }}
 
       - name: Build non-musl
         if: "!contains(matrix.target, 'x86_64-unknown-linux-musl')"
