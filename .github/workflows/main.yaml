@@ -51,7 +51,7 @@ jobs:
         shell: bash
         run: |
           pwd
-          ln -s ./vouch-py ../vouch-py
+          ln -s "$(pwd)/vouch-py" ../vouch-py
 
       - name: Set package metadata
         id: meta
