@@ -41,7 +41,7 @@ jobs:
       - name: Get vouch-py
         uses: actions/checkout@v2
         with:
-          repository: 'https://github.com/vouch-dev/vouch-py'
+          repository: 'vouch-dev/vouch-py'
           fetch-depth: 1
           path: '../'
 
