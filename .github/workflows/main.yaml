@@ -52,7 +52,9 @@ jobs:
         run: |
           ln -s "$(pwd)/vouch-py" ../../vouch-py;
           echo $(pwd);
-          tree;
+          ls -a;
+          echo hi;
+          ls -a ../../
 
       - name: Set package metadata
         id: meta
