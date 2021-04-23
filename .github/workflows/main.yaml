@@ -45,12 +45,13 @@ jobs:
         with:
           repository: 'vouch-dev/vouch-py'
           fetch-depth: 1
-          path: '../vouch-py'
+          path: vouch-py
       
       - name: whereami
         shell: bash
         run: |
           pwd
+          ln -s ./vouch-py ../vouch-py
 
       - name: Set package metadata
         id: meta
